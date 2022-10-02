@@ -84,7 +84,7 @@ program
 program
   .command("list-indices")
   .alias("li")
-  .description("Obtem uma lista de indices neste cluester")
+  .description("Obtem uma lista de indices neste cluster")
   .action(() => {
     const path = program.json ? "_all" : "_cat/indices?v";
     request({ url: fullUrl(path), json: program.json }, handleResponse);
