@@ -32,6 +32,8 @@ module.exports = (app, es) => {
    * 
    * declarar uma variável de ambiente no terminal para auxiliar nas rotas
    * BUNDLE_ID = AYOUllCV_0gE4Hq63alk  ->  echo $BUNDLE_ID
+   * 
+   *  curl -s localhost:9200/b4/bundle/_search?size=1000 | jq '.' busca todos ids
    */
   app.get("/api/bundle/:id", async (req, res) => {
     const options = {
@@ -70,6 +72,8 @@ module.exports = (app, es) => {
    * BAD IMPLEMENTATION! async Express handler without a try/catch block.
    * TESTE DE USO DE FUNÇÃO ASSINCRONA SEM TRY CATCH
    * curl -v localhost:60702/api/bundle2/no-such-bundle
+   *
+
    */
   app.get("/api/bundle2/:id", async (req, res) => {
     const options = {
