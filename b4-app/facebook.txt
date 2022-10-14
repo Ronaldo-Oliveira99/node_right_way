@@ -1,0 +1,67 @@
+2. Configure o SDK do Facebook para JavaScript
+O SDK do Facebook para JavaScript não tem arquivos autônomos que precisam ser baixados ou instalados. Em vez disso, basta incluir um pequeno trecho de JavaScript comum em seu HTML e ele carregará de forma assíncrona o SDK em suas páginas. O carregamento assíncrono significa que ele não bloqueia o carregamento de outros elementos de sua página.
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '{your-app-id}',
+      cookie     : true,
+      xfbml      : true,
+      version    : '{api-version}'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+3. Verificar status de login
+O primeiro passo ao carregar sua página da Web é descobrir se uma pessoa já está conectada ao seu aplicativo com o Login no Facebook. Você começa esse processo com uma chamada a FB.getLoginStatus. Essa função disparará uma chamada para o Facebook a fim de obter o status do login e chamará sua função de retorno de chamadas com os resultados.
+Retirado do código de exemplo acima, veja alguns dos códigos que são executados durante o carregamento da página para verificar o status de login da pessoa:
+FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+});Copiar código
+O objeto response que é fornecido para seu retorno de chamada contém uma série de campos:
+{
+    status: 'connected',
+    authResponse: {
+        accessToken: '...',
+        expiresIn:'...',
+        signedRequest:'...',
+        userID:'...'
+    }
+}Copiar código
+* status especifica o status de login da pessoa que está usando o aplicativo. O status pode ser um dos seguintes:
+* connected - a pessoa está conectada ao Facebook e conectou-se ao seu aplicativo.
+* not_authorized - a pessoa está conectada ao Facebook, mas não se conectou ao seu aplicativo..
+* unknown - a pessoa não está conectada ao Facebook, então não é possível saber se ela se conectou ao seu aplicativo ou se FB.logout() foi chamado antes e, portanto, não pode se conectar ao Facebook.
+* authResponse será incluído se o status for connected e for formado pelo seguinte:
+* accessToken - contém um token de acesso para a pessoa que está usando o aplicativo.
+* expiresIn - Indica o tempo de UNIX quando o token expira e precisa ser renovado.
+* signedRequest - um parâmetro assinado, contendo informações sobre a pessoa que está utilizando o aplicativo.
+* userID - é o ID da pessoa que está usando o aplicativo.
+Uma vez que o aplicativo sabe o status de login da pessoa que o está utilizando, ele pode fazer uma das seguintes opções:
+* Se a pessoa estiver conectada ao Facebook e ao seu aplicativo, redireciona a pessoa para a experiência de conexão do seu aplicativo.
+* Se a pessoa não estiver conectada ao seu aplicativo, ou não estiver conectada ao Facebook, a caixa de diálogo Login será exibida com FB.login() ou será exibido o botão Login.
+
+4. Adicionar o botão Login no Facebook
+Incluir o botão Login em sua página é fácil. Consulte a documentação sobre o botão Login e configure o botão como desejar. Então clique em Obter código, e será exibido o código que você precisa para exibir o botão em sua página.
+O atributo onlogin no botão para definir um retorno de chamada JavaScript que consulta o status para verificar se a pessoa conectou-se com êxito:
+<fb:login-button 
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
+Esse é o retorno de chamada. Ele chama FB.getLoginStatus() para obter o estado de login mais recente. (statusChangeCallback() é uma função que faz parte do exemplo que processa a resposta.)
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
