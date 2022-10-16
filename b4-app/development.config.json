@@ -1,5 +1,5 @@
 {
-  "serviceUrl": "https://b4.example.com:60900",
+  "serviceUrl": "https://b4-example.com:60900",
   "es": {
     "host": "localhost",
     "port": 9200,
@@ -14,6 +14,10 @@
     "twitter": {
       "consumerKey": "3tmYNVa9S8Q0w0odAxdQ7QbjB",
       "consumerSecret": "TWnhQiiMQyb32fCvjwZRtH5lY02ge3ADRLHVmjCcGYiTYuwMYx"
-      }
+      },
+    "google": { 
+      "clientID": "555729848343-386o0n2he1obqv7d6pms3ierlc62767n.apps.googleusercontent.com", 
+      "clientSecret": "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"
+}
   }
 }

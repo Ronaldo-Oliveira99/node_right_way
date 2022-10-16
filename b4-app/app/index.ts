@@ -20,6 +20,48 @@ const fetchJSON = async (url, method = 'GET') => {
     }
 };
 
+const getBundles = async () => {
+    const bundles = await fetchJSON('/api/list-bundles');
+    if (bundles.error) {
+    throw bundles.error;
+    }
+    return bundles;
+    };
+
+
+const addBundle = async (name) => {
+    try {
+    // Grab the list of bundles already created.
+        const bundles = await getBundles();
+        // Add the new bundle.
+        const url = `/api/list-bundles?name=${encodeURIComponent(name)}`;
+        const method = 'POST'
+        const res = await fetchJSON(url, method);
+        const resBody = await res.json();
+
+    // Merge the new bundle into the original results and show them.
+        bundles.push({id: resBody._id, name});
+        listBundles(bundles);
+        showAlert(`Bundle "${name}" created!`, 'success');
+
+    } catch (err) {
+        showAlert(err);
+    }
+};        
+
+const listBundles = bundles => {
+    const mainElement = document.body.querySelector('.b4-main');
+    mainElement.innerHTML =
+    templates.addBundleForm() + templates.listBundles({bundles});
+    const form = mainElement.querySelector('form');
+    
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const name = form.querySelector('input').value;
+            addBundle(name);
+    });
+};
+
 /**
 * Mostra um alerta para o usuário.
 */
@@ -52,6 +94,17 @@ const showView = async () => {
                 showAlert(session.error);
             }
             break;
+
+            case '#list-bundles':
+                try {
+                    const bundles = await getBundles();
+                    listBundles(bundles);
+                } catch (err) {
+                    showAlert(err);
+                    window.location.hash = '#welcome';
+            }
+            break;
+            
 
         // case '#list-bundles':
 

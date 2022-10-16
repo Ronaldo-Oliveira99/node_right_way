@@ -117,6 +117,32 @@ app.get(
   })
 );
 
+// strategy goolgle
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: nconf.get("auth:google:clientID"),
+      clientSecret: nconf.get("auth:google:clientSecret"),
+      callbackURL: new URL("/auth/google/callback", serviceUrl).href,
+      scope: "https://www.googleapis.com/auth/plus.login",
+    },
+    (accessToken, refreshToken, profile, done) => done(null, profile)
+  )
+);
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  })
+);
+
 app.use(morgan("dev"));
 
 app.get("/api/version", (req, res) => res.status(200).json(pkg.version));
@@ -136,6 +162,7 @@ if (isDev) {
   app.use(express.static("dist"));
 }
 
+// rotas
 app.get("/api/session", (req, res) => {
   const session = { auth: req.isAuthenticated() };
   res.status(200).json(session);
@@ -149,14 +176,15 @@ app.get("/auth/signout", (req, res) => {
 console.log("service_port ", servicePort);
 console.log("service_url ", serviceUrl);
 
+// servidor https
 const fs = require("fs");
 const https = require("https");
+const key = fs.readFileSync("./https/b4-example.com-key.pem", "utf-8");
+const cert = fs.readFileSync("./https/b4-example.com.pem", "utf-8");
 
-// const key = fs.readFileSync("./https/localhost-key.pem", "utf-8");
-// const cert = fs.readFileSync("./https/localhost.pem", "utf-8");
+// express.router
+app.use('/api', require('./lib/bundle.js')(nconf.get('es')));
 
-const key = fs.readFileSync("./https/b4.example.com-key.pem", "utf-8");
-const cert = fs.readFileSync("./https/b4.example.com.pem", "utf-8");
 
 https
   .createServer({ key, cert }, app)
