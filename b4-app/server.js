@@ -178,7 +178,7 @@ console.log("service_url ", serviceUrl);
 
 // servidor https
 const fs = require("fs");
-const https = require("https");
+const https = require("https") 
 const key = fs.readFileSync("./https/b4-example.com-key.pem", "utf-8");
 const cert = fs.readFileSync("./https/b4-example.com.pem", "utf-8");
 
@@ -186,9 +186,11 @@ const cert = fs.readFileSync("./https/b4-example.com.pem", "utf-8");
 app.use('/api', require('./lib/bundle.js')(nconf.get('es')));
 
 
-https
-  .createServer({ key, cert }, app)
-  .listen(servicePort, () => console.log("Ready."));
+// https
+//   .createServer({ key, cert }, app)
+//   .listen(servicePort, () => console.log("Ready."));
 
+
+  app.listen(servicePort, () => console.log("Ready."));
 // ./b4.example.com.pem" and the key at "./b4.example.com-key.pem" ✅
 //localhost.pem  -- localhost-key.pem
