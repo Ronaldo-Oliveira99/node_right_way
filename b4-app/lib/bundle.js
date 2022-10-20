@@ -12,7 +12,7 @@ module.exports = (es) => {
   const router = express.Router();
 
   /**
-   * Todas essas APIs exigem que o usuário seja autenticado. *
+   * Todas essas APIs exigem que o usuário seja autenticado. teste*
    */
   router.use((req, res, next) => {
     if (!req.isAuthenticated()) {
