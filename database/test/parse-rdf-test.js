@@ -11,7 +11,7 @@ describe('parseRDF', () => {
     it('should be a function', () => {
         expect(parseRDF).to.be.a('function');
     })
-
+// pg 87
     it('should parse RDF content', () => {
         const book = parseRDF(rdf);
         console.log('book',book)

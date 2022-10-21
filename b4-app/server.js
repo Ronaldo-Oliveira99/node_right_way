@@ -179,8 +179,8 @@ console.log("service_url ", serviceUrl);
 // servidor https
 const fs = require("fs");
 const https = require("https") 
-const key = fs.readFileSync("./https/b4-example.com-key.pem", "utf-8");
-const cert = fs.readFileSync("./https/b4-example.com.pem", "utf-8");
+const key = fs.readFileSync("./https/localhost-key.pem", "utf-8");
+const cert = fs.readFileSync("./https/localhost.pem", "utf-8");
 
 // express.router
 app.use('/api', require('./lib/bundle.js')(nconf.get('es')));
