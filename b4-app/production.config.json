@@ -1,0 +1,29 @@
+{
+  
+  "serviceUrl": "https://b4-exemplo.com:60900",
+  "es": {
+    "host": "localhost",
+    "port": 9200,
+    "books_index": "books",
+    "bundles_index": "b4"
+  },
+  "auth": { 
+    "facebook": {
+      "appID": "5985297374838234", 
+      "appSecret": "2452d68338d2cd3ed91f0ca0566a6d76"
+    },
+    "twitter": {
+      "consumerKey": "3tmYNVa9S8Q0w0odAxdQ7QbjB",
+      "consumerSecret": "TWnhQiiMQyb32fCvjwZRtH5lY02ge3ADRLHVmjCcGYiTYuwMYx"
+      },
+    "google": { 
+      "clientID": "555729848343-386o0n2he1obqv7d6pms3ierlc62767n.apps.googleusercontent.com", 
+      "clientSecret": "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"
+    }   
+  },
+  "redis": { 
+      "host": "localhost", 
+      "port": 6379, 
+      "secret": "12345"
+    }
+}

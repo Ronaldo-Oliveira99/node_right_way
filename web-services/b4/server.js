@@ -19,8 +19,8 @@ nconf.file(nconf.get("conf"));
 const app = express();
 app.use(morgan("dev"));
 app.get("/api/version", (req, res) => res.status(200).send(pkg.version));
-app.get("/ronaldo/luiz", (req, res) => res.status(200).send('esse é a rota do meu segundo sobrenome'));
-app.get("/ronaldo/oliveira", (req, res) => res.status(200).send('esse é a rota do meu primeiro sobrenome'));
+app.get("/ronaldo/luiz", (req, res) => res.status(200).send('esse é a rota do meu segundo sobrenome - LUIZ'));
+app.get("/ronaldo/oliveira", (req, res) => res.status(200).send('esse é a rota do meu primeiro sobrenome - OLIVEIRA'));
 
 /*invoca imediatamente a função do módulo pasando o objeto de aplicativo express e 
 configuração de pesquisa de Elastic.*/

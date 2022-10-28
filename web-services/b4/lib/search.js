@@ -12,6 +12,7 @@ module.exports = (app, es) => {
   /**
    * Search for books by matching a particular field value.
    * Example: /api/search/books/authors/Twain
+   * $ curl -s localhost:60702/api/search/books/authors/Shakespeare | jq '.[].title'
    */
   app.get("/api/search/books/:field/:query", (req, res) => {
     

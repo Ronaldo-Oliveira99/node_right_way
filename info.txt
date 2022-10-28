@@ -4,12 +4,12 @@
     
     // EXPORTAR UM ARQUIVO RDF PARA UM JSON  => pag. 113
     //export data_file="/media/ronaldo/16C282B7C2829B1F/estudos/node/right_way/data/cache/epub/11/pg11.rdf"
-    // $ node rdf-to-json.js $datap2
+    // $ node rdf-to-json.js $data_file
     //echo $data_file
 
     // EXPORTAR UM DIRETORIO PARA ENCONTRAR ARQUIVO RDF PARA JSON  => 115
     //export data_path="/media/ronaldo/16C282B7C2829B1F/estudos/node/right_way/data/cache/epub/"
-    //node rdf-to-bulk.js .$data_path | head
+    //node rdf-to-bulk.js $data_path | head
     //echo $data_path
 
 // CAPITULO 5
@@ -39,3 +39,23 @@
 
 
     page 149
+
+    EDITAR UMA CONTEUDO DE UM ARQUIVO DE TEXTO UBUNTU
+    gksudo gedit /etc/hosts
+
+    COMANDO PARA RODAR SERVER EM PRODUÇÃO:
+    npm run build
+
+    * verificar na arvore de diretórios
+    tree -F ./dist
+
+    * removendo node_modules
+    rm -rf node_modules
+
+    * instalar o npm com o node_env apontando para produção, impedira que instale as devDependences
+    NODE_ENV=production npm install
+
+    * iniciar o servidor em produção
+    NODE_ENV=production npm install
+
+

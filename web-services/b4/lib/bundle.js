@@ -72,6 +72,7 @@ module.exports = (app, es) => {
    * BAD IMPLEMENTATION! async Express handler without a try/catch block.
    * TESTE DE USO DE FUNÇÃO ASSINCRONA SEM TRY CATCH
    * curl -v localhost:60702/api/bundle2/no-such-bundle
+   * curl -v localhost:60702/api/bundle2/AYQGSBR_qgx0cEW9vYqV
    *
 
    */
@@ -162,7 +163,14 @@ module.exports = (app, es) => {
    * curl -X DELETE http://<host>:<port>/api/bundle/<id>
    * curl -s -X DELETE localhost:60702/api/bundle/$BUNDLE_ID/name/foo | jq '.'
    * curl -s -X DELETE localhost:60702/api/bundle/$BUNDLE_ID | jq '._source'
-   */
+  curl -s -X DELETE localhost:60702/api/bundle/AYQGQJS1qgx0cEW9vYqK | jq '._source'
+  curl -s -X DELETE localhost:60702/api/bundle/AYQMuAfUBp3tkNC2Mu7D | jq '._source'
+  curl -s localhost:9200/b4/bundle/AYQGQnfBqgx0cEW9vYqN | jq '.' 
+  curl -s localhost:60702/api/bundle/AYQMuAfUBp3tkNC2Mu7D | jq '.' -> rota pelo express
+  */
+
+
+
   app.delete("/api/bundle/:id", async (req, res) => {
     // 1- Determine o URL do pacote com base no objeto de configuração (es) e na parâmetros de solicitação.
     // 2- Use await com uma chamada para rp() para suspender até que a exclusão seja concluída.
@@ -176,6 +184,7 @@ module.exports = (app, es) => {
 
     try {
       const esResBody = await rp.delete(options);
+      console.log('teste_bundles',esResBody)
       res.status(202).json(esResBody);
     } catch (esResErr) {
       res.status(esResErr.statusCode || 502).json(esResErr.error);

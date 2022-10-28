@@ -5,6 +5,7 @@ import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 // @ts-ignore
 import * as templates from './templates.ts';
+import bundle = require('../lib/bundle');
 
 /**
 * Convenience method to fetch and decode JSON.
@@ -22,24 +23,26 @@ const fetchJSON = async (url, method = 'GET') => {
 
 const getBundles = async () => {
     const bundles = await fetchJSON('/api/list-bundles');
-    if (bundles.error) {
-    throw bundles.error;
-    }
+        if (bundles.error) {
+            throw bundles.error;
+        }
     return bundles;
     };
 
 
 const addBundle = async (name) => {
+    console.log('nome', name)
     try {
     // Grab the list of bundles already created.
         const bundles = await getBundles();
         // Add the new bundle.
-        const url = `/api/list-bundles?name=${encodeURIComponent(name)}`;
-        const method = 'POST'
-        const res = await fetchJSON(url, method);
-        const resBody = await res.json();
+        const url = `/api/bundle?name=${encodeURIComponent(name)}`;
+        const method = 'POST';
+        //const res = await fetchJSON(url, method);
+        //const resBody = res;
 
-    // Merge the new bundle into the original results and show them.
+        const resBody = await fetchJSON(url, method);
+    // Merge => Mescle o novo pacote com os resultados originais e mostrá-los.
         bundles.push({id: resBody._id, name});
         listBundles(bundles);
         showAlert(`Bundle "${name}" created!`, 'success');
@@ -51,8 +54,10 @@ const addBundle = async (name) => {
 
 const listBundles = bundles => {
     const mainElement = document.body.querySelector('.b4-main');
+    
     mainElement.innerHTML =
-    templates.addBundleForm() + templates.listBundles({bundles});
+        templates.addBundleForm() + templates.listBundles({bundles});
+    
     const form = mainElement.querySelector('form');
     
     form.addEventListener('submit', event => {
@@ -60,7 +65,60 @@ const listBundles = bundles => {
         const name = form.querySelector('input').value;
             addBundle(name);
     });
+
+    const deleteButtons = mainElement.querySelectorAll('button.delete');
+        for (let i = 0; i < deleteButtons.length; i++) {
+            const deleteButton = deleteButtons[i];
+            deleteButton.addEventListener('click', event => {
+                deleteBundle(deleteButton.getAttribute('data-bundle-id'));
+        });
+    }
 };
+
+/**
+*Exclua os pacote com o ID especificado e liste os pacotes.
+
+* EXERCICIOS
+*Dentro do bloco try, sua tarefa é implementar o seguinte:
+* Encontre o índice do bundleId selecionado na lista. (Se não houver correspondência
+índice.
+* Use getBundles() para recuperar a lista atual de bundles.
+bundle, lance uma exceção explicando o problema.)
+* Emita uma solicitação HTTP DELETE para o bundledId especificado usando fetch().
+* Remova o pacote da lista de chamada splice(), passando o indice encontrado.
+* Renderize a lista atualizada usando listBundles() e mostre uma mensagem de sucesso usando showAlert().
+*/
+const deleteBundle = async (bundleId) => {
+    try {
+    // Delete the bundle, then render the updated list with listBundles().
+        
+        const bundles = await getBundles();
+        const idx = bundles.findIndex(index => index.id === bundleId)
+        
+        if(idx === -1) {
+            throw 'indice nao encontrado'
+        }
+
+        const bundleName = bundles[idx].name
+
+        const url = `/api/bundle/${encodeURIComponent(bundleId)}`;
+        const method = 'DELETE';
+
+        var delBundle = await fetch(url, {method:method});
+        
+        console.log('retorno', delBundle.json())
+        
+        // Merge => Mescle o novo pacote com os resultados originais e mostrá-los.
+        bundles.splice(idx,1);
+
+        listBundles(bundles);
+    
+        showAlert(`Bundle ${bundleName} deleted!`, 'success');
+    }catch (err) {
+        showAlert(err);
+    }
+};
+    
 
 /**
 * Mostra um alerta para o usuário.

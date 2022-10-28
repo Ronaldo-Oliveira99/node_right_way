@@ -34,6 +34,26 @@ const morgan = require("morgan");
 
 const app = express();
 
+app.use(morgan("dev"));
+
+app.get("/api/version", (req, res) => res.status(200).json(pkg.version));
+
+// Serve webpack assets.
+console.log('isdev', isDev)
+if (isDev) {
+  const webpack = require("webpack");
+  const webpackMiddleware = require("webpack-dev-middleware");
+  const webpackConfig = require("./webpack.config.js");
+  app.use(
+    webpackMiddleware(webpack(webpackConfig), {
+      publicPath: "/",
+      stats: { colors: true },
+    })
+  );
+} else {
+  app.use(express.static("dist"));
+}
+
 // configuração de Express sessions.
 const expressSession = require("express-session");
 if (isDev) {
@@ -48,7 +68,17 @@ if (isDev) {
     })
   );
 } else {
-  // Use RedisStore in production mode.
+    const RedisStore = require('connect-redis')(expressSession);
+    app.use(expressSession({
+      resave: false,
+      saveUninitialized: false,
+      secret: nconf.get('redis:secret'),
+      store: new RedisStore({
+        host: nconf.get('redis:host'),
+        port: nconf.get('redis:port'),
+      }),
+    }));
+
 }
 
 // Passport Authentication.
@@ -143,24 +173,6 @@ app.get(
   })
 );
 
-app.use(morgan("dev"));
-
-app.get("/api/version", (req, res) => res.status(200).json(pkg.version));
-
-// Serve webpack assets.
-if (isDev) {
-  const webpack = require("webpack");
-  const webpackMiddleware = require("webpack-dev-middleware");
-  const webpackConfig = require("./webpack.config.js");
-  app.use(
-    webpackMiddleware(webpack(webpackConfig), {
-      publicPath: "/",
-      stats: { colors: true },
-    })
-  );
-} else {
-  app.use(express.static("dist"));
-}
 
 // rotas
 app.get("/api/session", (req, res) => {
@@ -179,18 +191,22 @@ console.log("service_url ", serviceUrl);
 // servidor https
 const fs = require("fs");
 const https = require("https") 
-const key = fs.readFileSync("./https/localhost-key.pem", "utf-8");
-const cert = fs.readFileSync("./https/localhost.pem", "utf-8");
+
+// const key = fs.readFileSync("./https/localhost-key.pem", "utf-8");
+// const cert = fs.readFileSync("./https/localhost.pem", "utf-8");
+
+const key = fs.readFileSync("./https/b4-exemplo.com-key.pem", "utf-8");
+const cert = fs.readFileSync("./https/b4-exemplo.com.pem", "utf-8");
 
 // express.router
 app.use('/api', require('./lib/bundle.js')(nconf.get('es')));
 
 
-// https
-//   .createServer({ key, cert }, app)
-//   .listen(servicePort, () => console.log("Ready."));
+https
+  .createServer({ key, cert }, app)
+  .listen(servicePort, () => console.log("Secure Server Ready."));
 
 
-  app.listen(servicePort, () => console.log("Ready."));
+//app.listen(servicePort, () => console.log("Ready."));
 // ./b4.example.com.pem" and the key at "./b4.example.com-key.pem" ✅
 //localhost.pem  -- localhost-key.pem

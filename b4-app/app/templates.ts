@@ -118,7 +118,7 @@ export const addBundleForm = Handlebars.compile(`
     <div class="panel-body">
         <form>
             <div class="input-group">
-                <input class="form-control" placeholder="Bundle Name" />
+                <input class="form-control" placeholder="Nome do Pacote" />
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Create</button>
                 </span>

@@ -18,7 +18,7 @@ const fullUrl = (path = "") => {
     }
   }
   return url + path.replace(/^\/*/, "");
-  return url + path.replace(/^\/*/, "");
+  
 };
 
 const handleResponse = (err, res, body) => {

@@ -65,3 +65,7 @@ function checkLoginState() {
     statusChangeCallback(response);
   });
 }
+
+
+https://b4-exemplo.com:60900/auth/facebook/callback
+https://b4-exemplo.com:60900/auth/facebookRemover
